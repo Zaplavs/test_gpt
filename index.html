@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Test GPT</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <main class="hero">
+    <div class="card">
+      <span class="badge">test_gpt</span>
+      <h1>Привет! 👋</h1>
+      <p>Это простой тестовый сайт, созданный вместе с ChatGPT.</p>
+      <button id="helloBtn">Нажми меня</button>
+      <p id="message" class="message"></p>
+    </div>
+  </main>
+
+  <script>
+    const button = document.getElementById('helloBtn');
+    const message = document.getElementById('message');
+
+    button.addEventListener('click', () => {
+      message.textContent = 'Всё работает! 🚀';
+    });
+  </script>
+</body>
+</html>
