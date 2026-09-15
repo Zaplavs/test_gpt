@@ -3,47 +3,47 @@ const menuToggle = document.querySelector('.menu-toggle');
 const mainNav = document.querySelector('.main-nav');
 const navLinks = document.querySelectorAll('.main-nav a');
 const revealItems = document.querySelectorAll('.reveal');
-const year = document.querySelector('#year');
 
-const updateHeader = () => {
-  header.classList.toggle('scrolled', window.scrollY > 18);
-};
+function updateHeader() {
+  header?.classList.toggle('scrolled', window.scrollY > 24);
+}
 
 updateHeader();
 window.addEventListener('scroll', updateHeader, { passive: true });
 
-const closeMenu = () => {
-  menuToggle?.classList.remove('is-open');
-  mainNav?.classList.remove('is-open');
-  menuToggle?.setAttribute('aria-expanded', 'false');
-  document.body.classList.remove('menu-open');
-};
+if (menuToggle && mainNav) {
+  menuToggle.addEventListener('click', () => {
+    const isOpen = mainNav.classList.toggle('open');
+    menuToggle.classList.toggle('active', isOpen);
+    menuToggle.setAttribute('aria-expanded', String(isOpen));
+    document.body.style.overflow = isOpen ? 'hidden' : '';
+  });
 
-menuToggle?.addEventListener('click', () => {
-  const willOpen = !mainNav.classList.contains('is-open');
-  menuToggle.classList.toggle('is-open', willOpen);
-  mainNav.classList.toggle('is-open', willOpen);
-  menuToggle.setAttribute('aria-expanded', String(willOpen));
-  document.body.classList.toggle('menu-open', willOpen);
-});
-
-navLinks.forEach((link) => link.addEventListener('click', closeMenu));
-
-window.addEventListener('resize', () => {
-  if (window.innerWidth > 980) closeMenu();
-});
-
-const revealObserver = new IntersectionObserver(
-  (entries, observer) => {
-    entries.forEach((entry) => {
-      if (!entry.isIntersecting) return;
-      entry.target.classList.add('is-visible');
-      observer.unobserve(entry.target);
+  navLinks.forEach((link) => {
+    link.addEventListener('click', () => {
+      mainNav.classList.remove('open');
+      menuToggle.classList.remove('active');
+      menuToggle.setAttribute('aria-expanded', 'false');
+      document.body.style.overflow = '';
     });
-  },
-  { threshold: 0.12, rootMargin: '0px 0px -45px' }
-);
+  });
+}
 
-revealItems.forEach((item) => revealObserver.observe(item));
+if ('IntersectionObserver' in window) {
+  const observer = new IntersectionObserver((entries, obs) => {
+    entries.forEach((entry) => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('is-visible');
+        obs.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.12, rootMargin: '0px 0px -40px' });
 
-year.textContent = new Date().getFullYear();
+  revealItems.forEach((item) => observer.observe(item));
+} else {
+  revealItems.forEach((item) => item.classList.add('is-visible'));
+}
+
+window.addEventListener('load', () => {
+  document.querySelectorAll('.hero .reveal').forEach((item) => item.classList.add('is-visible'));
+});
